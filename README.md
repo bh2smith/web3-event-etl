@@ -18,7 +18,9 @@ Note that:
 ### Database
 
 ```shell
+# Build
 docker build -f docker/Dockerfile.db -t db-image .
+# Run
 docker run -d --network=host db-image
 ```
 
@@ -41,11 +43,21 @@ You can now run the script-image as many times as you like with whatever string 
 
 ## Triggering Script Image
 
+The database and script from above would exist in our AWS cluster as a database & AWS lambda function respectively.
+
+According to [this documentation](https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html) it is possible to
+invoke a lambda function via POST request.
+This would imply that the above services are independent of the options explorer made below
+
 Tenderly Web3 Actions provides a serverless Smart Contract event listener from which one can execute actions defined in
-Typescript. In particular, from typescript one can execute bash commands such as
+Typescript. In particular, from within the web3 action we could trigger an AWS lambda
+via [function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html). In particular, see
+
+- [creating and managing function URLs](https://docs.aws.amazon.com/lambda/latest/dg/urls-configuration.html)
+- [invoking function URLs](https://docs.aws.amazon.com/lambda/latest/dg/urls-invocation.html)
 
 ```ts
-const { exec } = require("child_process");
+const {exec} = require("child_process");
 
 exec("docker run -d --network=host script-image --tx-hash 0x1", (error, stdout, stderr) => {
     if (error) {
