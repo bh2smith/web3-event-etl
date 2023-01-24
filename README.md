@@ -59,10 +59,12 @@ via [function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html
 ## WebHooks
 
 ### Alchemy
+
 Doesn't work. See `alchemy` directory
 
 ### Tenderly
-Works wonders. Version found in `tenderly` deployed at 
+
+Works wonders. Version found in `tenderly` deployed at
 https://dashboard.tenderly.co/bh2smith/project/action/6e0a113b-39e3-44cb-b5b2-3b4e8c7db365
 
 Parses Settlement Transfers and currently logs meaningful parsed data.
@@ -70,6 +72,7 @@ Parses Settlement Transfers and currently logs meaningful parsed data.
 Nearly all methods are tested.
 
 #### Testing Trigger
+
 ```shell
 cd tenderly/actions && npm install
 yarn test
@@ -83,3 +86,14 @@ tenderly login
 tenderly actions deploy
 ```
 
+# Deployment Ideas
+
+In kubernetes we might have the following setup:
+
+- [Postgres Instance](https://gist.github.com/anaisbetts/2244d6517dc2cc09b4470e6f68c2bec1)
+- [Optional] [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html) for ETL Process
+- [Webhook](https://dashboard.tenderly.co/bh2smith/project/action/6e0a113b-39e3-44cb-b5b2-3b4e8c7db365) invoking
+  the Lambda or writing directly to the database.
+
+With all of the above setup, one would then deploy a [dune-sync](https://github.com/cowprotocol/dune-sync) cronjob which
+reads the DB and uploads to Dunes AWS bucket
