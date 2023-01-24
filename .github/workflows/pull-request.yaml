@@ -20,12 +20,12 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm ci
-        working-directory: .tenderly/actions
+        working-directory: ./tenderly/actions
 
       - name: ESLint
         run: npm run lint
-        working-directory: .tenderly/actions
+        working-directory: ./tenderly/actions
 
       - name: Tests
         run: npm run test
-        working-directory: .tenderly/actions
+        working-directory: ./tenderly/actions
