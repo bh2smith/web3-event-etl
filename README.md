@@ -56,19 +56,30 @@ via [function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html
 - [creating and managing function URLs](https://docs.aws.amazon.com/lambda/latest/dg/urls-configuration.html)
 - [invoking function URLs](https://docs.aws.amazon.com/lambda/latest/dg/urls-invocation.html)
 
-```ts
-const {exec} = require("child_process");
+## WebHooks
 
-exec("docker run -d --network=host script-image --tx-hash 0x1", (error, stdout, stderr) => {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-});
+### Alchemy
+Doesn't work. See `alchemy` directory
+
+### Tenderly
+Works wonders. Version found in `tenderly` deployed at 
+https://dashboard.tenderly.co/bh2smith/project/action/6e0a113b-39e3-44cb-b5b2-3b4e8c7db365
+
+Parses Settlement Transfers and currently logs meaningful parsed data.
+
+Nearly all methods are tested.
+
+#### Testing Trigger
+```shell
+cd tenderly/actions && npm install
+yarn test
+```
+
+#### Deployment
+
+```shell
+cd tenderly
+tenderly login
+tenderly actions deploy
 ```
 
