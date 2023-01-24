@@ -114,7 +114,6 @@ export function partitionEventLogs(logs: Log[]): ClassifiedEvents {
     trades: [],
     settlements: [],
   };
-  console.log("Parsing", logs);
   while (logs.length > 0) {
     const log = logs.pop();
     const topics = log?.topics;
