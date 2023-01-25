@@ -5,7 +5,7 @@ import {
   TransactionEvent,
   Log,
 } from "@tenderly/actions";
-import db, { event_tx_hashes } from "./src/database";
+import { insertSettlementEvent } from "./src/database";
 
 export const SETTLEMENT_CONTRACT_ADDRESS =
   "0x9008d19f58aabd9ed0d60971565aa8510560ab41";
@@ -62,16 +62,10 @@ export const triggerInternalTransfersPipeline: ActionFn = async (
 ) => {
   const parsedData = settlementEventHandler(event);
   // TODO 1 - Trigger AWS Lambda.
-
+  const dbUrl = await context.secrets.get("DATABASE_URL");
   // TODO 2 - Write (TxHash, Solver) directly to DB.
-  await insertSettlementEvent(parsedData.hash, parsedData.solver);
+  await insertSettlementEvent(dbUrl, parsedData.hash, parsedData.solver);
 };
-
-async function insertSettlementEvent(txHash: string, solver: string) {
-  console.log(`Inserting Settlement(txHash, solver) = (${txHash}, ${solver})`);
-  await event_tx_hashes(db).insert({ tx_hash: txHash, solver: solver });
-  console.log("success!");
-}
 
 export function settlementEventHandler(event: Event): TransactionData {
   const transactionEvent = event as TransactionEvent;

@@ -29,3 +29,5 @@ jobs:
       - name: Tests
         run: npm run test
         working-directory: ./tenderly/actions
+#        env:
+#          DATABASE_URL: ${{ secrets.DATABASE_URL }}
