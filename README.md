@@ -103,6 +103,6 @@ reads the DB and uploads to Dunes AWS bucket
 Generate types
 
 ```shell
-npx @databases/pg-schema-cli --database $DB_URL --directory src/__generated__
+npx @databases/pg-schema-cli --database $DATABASE_URL --directory src/__generated__
 ```
-where `DB_URL` takes the form `postgresql://{user}:{password}@{host}:{port}/{database}`
+where `$DATABASE_URL` takes the form `postgresql://{user}:{password}@{host}:{port}/{database}`
