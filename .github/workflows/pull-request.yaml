@@ -5,6 +5,25 @@ on:
     branches: [main]
 
 jobs:
+  db-job:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+        # Copy repo contents into container (needed to populate DB)
+        volumes:
+          - ${{ github.workspace }}:/repo
+        run: psql -h localhost -U postgres -d postgres -a -f create_db.sql
   tenderly-ci:
     name: Tenderly Lint & Tests
     runs-on: ubuntu-latest
@@ -29,5 +48,5 @@ jobs:
       - name: Tests
         run: npm run test
         working-directory: ./tenderly/actions
-#        env:
-#          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        env:
+#          DATABASE_URL: postgresql://postgres:local:5432/postgres

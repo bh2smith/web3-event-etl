@@ -3,6 +3,7 @@
 
 import createConnectionPool, { sql } from "@databases/pg";
 import tables from "@databases/pg-typed";
+import ConnectionPool from "@databases/pg/lib/types/Queryable"
 import DatabaseSchema from "./__generated__";
 
 export { sql };
@@ -12,17 +13,19 @@ const { event_tx_hashes } = tables<DatabaseSchema>({
   databaseSchema: require("./__generated__/schema.json"),
 });
 
-async function insertSettlementEvent(
-  dbURL: string,
-  txHash: string,
-  solver: string
-) {
-  const db = createConnectionPool({
+function getDB(dbURL: string): ConnectionPool {
+  return createConnectionPool({
     connectionString: dbURL,
     bigIntMode: "bigint",
   });
+}
+async function insertSettlementEvent(
+  db: ConnectionPool,
+  txHash: string,
+  solver: string
+) {
   console.log(`Inserting Settlement(txHash, solver) = (${txHash}, ${solver})`);
   await event_tx_hashes(db).insert({ tx_hash: txHash, solver: solver });
   console.log("success!");
 }
-export { event_tx_hashes, insertSettlementEvent };
+export { event_tx_hashes, insertSettlementEvent, getDB };
