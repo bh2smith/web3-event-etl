@@ -5,7 +5,8 @@ on:
     branches: [main]
 
 jobs:
-  db-job:
+  tenderly-ci:
+    name: Tenderly Lint & Tests
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -23,11 +24,6 @@ jobs:
         # Copy repo contents into container (needed to populate DB)
         volumes:
           - ${{ github.workspace }}:/repo
-        run: psql -h localhost -U postgres -d postgres -a -f create_db.sql
-  tenderly-ci:
-    name: Tenderly Lint & Tests
-    runs-on: ubuntu-latest
-
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
@@ -45,8 +41,11 @@ jobs:
         run: npm run lint
         working-directory: ./tenderly/actions
 
+      - name: Populate DB
+        run: psql -h localhost -U postgres -d postgres -a -f ./docker/create_db.sql
+
       - name: Tests
         run: npm run test
         working-directory: ./tenderly/actions
-        env:
+#        env:
 #          DATABASE_URL: postgresql://postgres:local:5432/postgres
