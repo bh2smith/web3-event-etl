@@ -42,11 +42,10 @@ jobs:
         working-directory: ./tenderly/actions
 
       - name: Populate DB
-        run: psql -h localhost -U postgres -d postgres -a -f ./docker/create_db.sql
-        env:
-          PGPASSWORD=postgres
+        run: psql postgresql://postgres:postgres@localhost:5432/postgres -f ./docker/create_db.sql
+
       - name: Tests
         run: npm run test
         working-directory: ./tenderly/actions
 #        env:
-#          DATABASE_URL: postgresql://postgres:local:5432/postgres
+#          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
