@@ -3,7 +3,7 @@
 
 import createConnectionPool, { sql } from "@databases/pg";
 import tables from "@databases/pg-typed";
-import ConnectionPool from "@databases/pg/lib/types/Queryable"
+import ConnectionPool from "@databases/pg/lib/types/Queryable";
 import DatabaseSchema from "./__generated__";
 
 export { sql };
