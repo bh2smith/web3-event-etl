@@ -42,10 +42,9 @@ jobs:
         working-directory: ./tenderly/actions
 
       - name: Populate DB
+        # https://www.starkandwayne.com/blog/using-a-postgres-uri-with-psql/
         run: psql postgresql://postgres:postgres@localhost:5432/postgres -f ./docker/create_db.sql
 
       - name: Tests
-        run: npm run test
+        run: npm run test --silent
         working-directory: ./tenderly/actions
-#        env:
-#          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
