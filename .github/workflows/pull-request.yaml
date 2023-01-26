@@ -43,7 +43,8 @@ jobs:
 
       - name: Populate DB
         run: psql -h localhost -U postgres -d postgres -a -f ./docker/create_db.sql
-
+        env:
+          PGPASSWORD=postgres
       - name: Tests
         run: npm run test
         working-directory: ./tenderly/actions
