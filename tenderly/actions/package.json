@@ -1,7 +1,7 @@
 {
   "name": "actions",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp ./src/__generated__/schema.json out/src/__generated__/",
     "test": "jest",
     "lint": "eslint && prettier --check .",
     "lint:fix": "eslint && prettier --write ."
