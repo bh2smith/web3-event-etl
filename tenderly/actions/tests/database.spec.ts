@@ -1,9 +1,8 @@
 import { getDB, insertSettlementEvent } from "../src/database";
 import * as process from "process";
-import { SQLQuery } from "@databases/pg";
 
 const dbURL: string =
-  process.env["DATABASE_URL"] || "postgresql://postgres:local:5432/postgres";
+  process.env["DATABASE_URL"] || "postgresql://postgres:postgres@localhost:5432/postgres";
 const db = getDB(dbURL);
 describe("insertSettlementEvent(txHash, solver)", () => {
   test("Inserts to DB", async () => {
