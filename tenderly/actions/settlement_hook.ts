@@ -5,6 +5,7 @@ import {
   TransactionEvent,
   Log,
 } from "@tenderly/actions";
+import { getDB, insertSettlementEvent } from "./src/database";
 
 export const SETTLEMENT_CONTRACT_ADDRESS =
   "0x9008d19f58aabd9ed0d60971565aa8510560ab41";
@@ -24,24 +25,24 @@ export enum TransferType {
 
 export interface SettlementTransfer {
   amount: BigInt;
-  to: String;
-  from: String;
+  to: string;
+  from: string;
   type: TransferType;
 }
 
 export interface TradeEvent {
   // The only relevant field for our purposes at this time.
-  owner: String;
+  owner: string;
 }
 
 export interface TransferEvent {
-  to: String;
-  from: String;
+  to: string;
+  from: string;
   amount: BigInt;
 }
 
 export interface SettlementEvent {
-  solver: String;
+  solver: string;
 }
 
 export interface ClassifiedEvents {
@@ -51,8 +52,8 @@ export interface ClassifiedEvents {
 }
 
 export interface TransactionData {
-  hash: String;
-  solver: String;
+  hash: string;
+  solver: string;
   transfers: SettlementTransfer[];
 }
 export const triggerInternalTransfersPipeline: ActionFn = async (
@@ -60,12 +61,10 @@ export const triggerInternalTransfersPipeline: ActionFn = async (
   event: Event
 ) => {
   const parsedData = settlementEventHandler(event);
-  console.log(
-    `Event - Settlement(txHash, solver) = (${parsedData.hash}, ${parsedData.solver})`
-  );
   // TODO 1 - Trigger AWS Lambda.
-
   // TODO 2 - Write (TxHash, Solver) directly to DB.
+  const dbUrl = await context.secrets.get("DATABASE_URL");
+  await insertSettlementEvent(getDB(dbUrl), parsedData.hash, parsedData.solver);
 };
 
 export function settlementEventHandler(event: Event): TransactionData {
@@ -92,7 +91,7 @@ export function settlementEventHandler(event: Event): TransactionData {
 }
 export function transferTypeFrom(
   isUser: boolean,
-  referenceAddress: String,
+  referenceAddress: string,
   transfer: TransferEvent
 ): TransferType {
   if (![transfer.to, transfer.from].includes(referenceAddress)) {
@@ -150,7 +149,7 @@ export function partitionEventLogs(logs: Log[]): ClassifiedEvents {
 
 export function classifyTransfer(
   transfer: TransferEvent,
-  tradeOwners: Set<String>
+  tradeOwners: Set<string>
 ): SettlementTransfer {
   const isUser = tradeOwners.has(transfer.to) || tradeOwners.has(transfer.from);
   return {
@@ -160,6 +159,6 @@ export function classifyTransfer(
     type: transferTypeFrom(isUser, SETTLEMENT_CONTRACT_ADDRESS, transfer),
   };
 }
-export function addressFromBytes(hexStr: String): String {
+export function addressFromBytes(hexStr: string): string {
   return "0x" + hexStr.slice(-40);
 }

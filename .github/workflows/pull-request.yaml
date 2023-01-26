@@ -8,7 +8,22 @@ jobs:
   tenderly-ci:
     name: Tenderly Lint & Tests
     runs-on: ubuntu-latest
-
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+        # Copy repo contents into container (needed to populate DB)
+        volumes:
+          - ${{ github.workspace }}:/repo
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
@@ -26,6 +41,10 @@ jobs:
         run: npm run lint
         working-directory: ./tenderly/actions
 
+      - name: Populate DB
+        # https://www.starkandwayne.com/blog/using-a-postgres-uri-with-psql/
+        run: psql postgresql://postgres:postgres@localhost:5432/postgres -f ./docker/create_db.sql
+
       - name: Tests
-        run: npm run test
+        run: npm run test --silent
         working-directory: ./tenderly/actions

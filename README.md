@@ -97,3 +97,12 @@ In kubernetes we might have the following setup:
 
 With all of the above setup, one would then deploy a [dune-sync](https://github.com/cowprotocol/dune-sync) cronjob which
 reads the DB and uploads to Dunes AWS bucket
+
+### Connect to AWS DB
+
+Generate types
+
+```shell
+npx @databases/pg-schema-cli --database $DATABASE_URL --directory src/__generated__
+```
+where `$DATABASE_URL` takes the form `postgresql://{user}:{password}@{host}:{port}/{database}`

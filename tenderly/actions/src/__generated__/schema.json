@@ -1,0 +1,21 @@
+[
+  {
+    "name": "event_tx_hashes",
+    "columns": [
+      {
+        "name": "solver",
+        "isNullable": false,
+        "hasDefault": false,
+        "typeId": 1042,
+        "typeName": "BPCHAR"
+      },
+      {
+        "name": "tx_hash",
+        "isNullable": false,
+        "hasDefault": false,
+        "typeId": 1042,
+        "typeName": "BPCHAR"
+      }
+    ]
+  }
+]

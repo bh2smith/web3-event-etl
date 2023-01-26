@@ -4,6 +4,7 @@
     "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
+    "resolveJsonModule": true,
     "outDir": "out",
     "sourceMap": true,
     "strict": true,
