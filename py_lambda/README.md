@@ -23,7 +23,8 @@ docker run -p 9000:8080 -env DATABASE_URL=$DB_URL test-lambda
 Post to handler
 
 ```shell
-curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"txHash": "Hello2", "solver": "World2"}'
+ export LAMBDA_URL=http://localhost:9000/2015-03-31/functions/function/invocations
+curl -XPOST ${LAMBDA_URL} -d '{"txHash": "Hello2", "solver": "World2"}'
 ```
 
 # Create & Publish to Container Registry
