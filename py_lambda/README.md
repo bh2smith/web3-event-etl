@@ -1,43 +1,55 @@
 # AWS Lambda Function (Container Image of Python Handler)
 
+The following is adapted from these [AWS Docs]([Docs here](https://docs.aws.amazon.com/lambda/latest/dg/images-create.html))
+
+Setup environment
+
+```shell
+cp .env_sample .env
+source .env
+```
+
+which should consist of things like
+
+```shell
+# Container Image Build and Publish env
+export IMAGE_NAME=
+export AWS_REGION=
+export AWS_ID=
+export AWS_URL=${AWS_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+# Run time env
+export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+export FUNCTION_URL=http://localhost:9000/2015-03-31/functions/function/invocations
+```
+
 # Build
 
 ```shell
-docker build -t test-lambda .
+docker build -t ${IMAGE_NAME} .
 ```
 
 ## Local E2E Test
 
 Assuming you have a local postgres instance running at:
 
-```shell
-export DB_URL=postgresql://postgres:postgres@localhost:5432/postgres
-```
-
-Run the lambda locally
+Run the lambda locally at `postgresql://postgres:postgres@localhost:5432/postgres`
 
 ```shell
-docker run -p 9000:8080 -env DATABASE_URL=$DB_URL test-lambda
+docker run -p 9000:8080 -env DATABASE_URL=${DATABASE_URL} ${IMAGE_NAME}
 ```
 
 Post to handler
 
 ```shell
-curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"txHash": "Hello2", "solver": "World2"}'
+curl -XPOST ${FUNCTION_URL} -d '{"txHash": "Hello", "solver": "World"}'
 ```
 
 # Create & Publish to Container Registry
 
 ```shell
-export AWS_REGION=
-export AWS_ID=
-export IMAGE_NAME=test-lambda
-export AWS_URL=${AWS_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-```
-
-```shell
 aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_URL}
-aws ecr create-repository --repository-name ${IMAGE_NAME} --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
+aws ecr create-repository --repository-name ${IMAGE_NAME} --region ${AWS_REGION} --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
 docker tag ${IMAGE_NAME}:latest ${AWS_URL}/${IMAGE_NAME}:latest
 docker push ${AWS_URL}/${IMAGE_NAME}:latest 
 ```
@@ -47,15 +59,17 @@ docker push ${AWS_URL}/${IMAGE_NAME}:latest
 Via AWS Console this can now be selected. Set relevant environment variables. In the configuration settings, you can
 enable `functionURL`. Once the functionURL is acquired try to invoke it as following:
 
-```shell
-export FUNCTION_URL=
-```
-
 then
 
 ```shell
+
+```
+
+```shell
+export REMOTE_URL=
+
 curl -XPOST \
-      ${FUNCTION_URL} \
+      ${REMOTE_URL} \
       -H 'content-type: application/json' \
-      -d '{"txHash": "Hello2", "solver": "World2"}'
+      -d '{"txHash": "Hello", "solver": "World"}'
 ```
