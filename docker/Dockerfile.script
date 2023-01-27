@@ -6,6 +6,6 @@ COPY ../requirements.txt .
 RUN pip install -r requirements.txt
 COPY ../src ./src
 
-ENV DB_URL=postgresql://postgres:postgress@localhost:5432/postgres
+ENV DATABASE_URL=postgresql://postgres:postgress@localhost:5432/postgres
 
 ENTRYPOINT [ "python3", "-m" , "src.main"]
