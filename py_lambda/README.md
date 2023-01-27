@@ -1,5 +1,7 @@
 # AWS Lambda Function (Container Image of Python Handler)
 
+The following is adapted from these [AWS Docs]([Docs here](https://docs.aws.amazon.com/lambda/latest/dg/images-create.html))
+
 Setup environment
 
 ```shell
