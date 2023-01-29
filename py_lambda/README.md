@@ -73,3 +73,9 @@ curl -XPOST \
       -H 'content-type: application/json' \
       -d '{"txHash": "Hello", "solver": "World"}'
 ```
+
+
+### Notes & Issues
+
+- Role/Permissions were wrong (cf [slack](https://cowservices.slack.com/archives/D04J9FVJHEG/p1674822913397879))
+- Test (event) input does not agree with input coming from functionURL (must append some SSL stuff).
