@@ -62,10 +62,6 @@ enable `functionURL`. Once the functionURL is acquired try to invoke it as follo
 then
 
 ```shell
-
-```
-
-```shell
 export REMOTE_URL=
 
 curl -XPOST \
